@@ -1,8 +1,0 @@
-Address
-rs2qFC2nTCdT4sV8ejBqnaPM1chJnetEw5
-Secret
-sEdVV4eFKHdwrx93iNvMj7PiFUPVCDB
-Balance
-10,000 XRP
-Sequence Number
-1559039
