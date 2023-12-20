@@ -73,12 +73,14 @@
 
       <hr />
 
-      <h3 style="color: chocolate">Update Asset (or Quick Add)</h3>
-      <label for="edit_asset_symbol_txt">Asset Symbol:</label>
-      <input type="text" id="edit_asset_symbol_txt" />
-      <label for="edit_asset_size_txt">Size (- for reduction):</label>
-      <input type="text" id="edit_asset_size_txt" /> <br />
-      <button style="color: chocolate" onclick="editAsset()">Edit Asset</button>
+      <h3 style="color: chocolate">Add Asset Transaction(or Quick Add)</h3>
+      <label for="update_asset_symbol_txt">Asset Symbol:</label>
+      <input type="text" id="update_asset_symbol_txt" />
+      <label for="update_asset_size_txt">Size (- for reduction):</label>
+      <input type="text" id="update_asset_size_txt" /> <br />
+      <button style="color: chocolate" onclick="updateAsset()">
+        Add Asset Transaction
+      </button>
 
       <hr />
 
@@ -364,7 +366,20 @@
       // A Web3Provider wraps a standard Web3 provider, which is
       // what MetaMask injects as window.ethereum into each page
       provider = new ethers.providers.Web3Provider(window.ethereum);
-      console.log(provider);
+
+      // get network
+      const network = await provider.getNetwork();
+
+      // ensure that we are in XRPL EVM Side Chain
+      if (network.chainId != 1440002) {
+        alert(
+          "You are not connected to XRPL EVM Sidechain! \n" +
+            "Please connect and try again!"
+        );
+
+        // return since we are not in the side chain
+        return;
+      }
 
       // MetaMask requires requesting permission to connect users accounts
       if (walletAddress == null) {
@@ -440,21 +455,61 @@
       }
     }
 
-    // generate dynamically portfolio table with
-    function genPortfolioTable(data) {
-      let table = "<table style='margin: 0px auto;'>";
-      table += "<tr><th>Symbol</th><th>Size</th></tr>";
-      data.forEach((asset) => {
-        table += `<tr><td>${hex_to_ascii(
-          asset.symbol
-        )}</td><td>${ethers.utils.formatUnits(asset.size, "ether")}</td></tr>`;
-      });
+    // update an asset
+    async function updateAsset() {
+      if (signer == null) {
+        alert("Please connect wallet!");
+        console.error("Signer is not connected");
+        return;
+      }
 
-      table += "</table>";
+      let asset_symbol = document
+        .getElementById("update_asset_symbol_txt")
+        .value.toUpperCase();
+      console.log(asset_symbol);
 
-      return table;
+      let asset_size = document.getElementById("update_asset_size_txt").value;
+      console.log(asset_size);
+
+      try {
+        // try to add the new asset
+        await contract_instance.updateAsset(
+          asset_symbol,
+          ethers.utils.parseEther(asset_size)
+        );
+      } catch (err) {
+        console.error(err);
+      } finally {
+        alert("Asset " + asset_symbol + " action: " + asset_size + " !");
+        console.log("Asset " + asset_symbol + " action: " + asset_size + " !");
+      }
     }
 
+    // delete asset from portfolio
+    async function deleteAsset() {
+      if (signer == null) {
+        alert("Please connect wallet!");
+        console.error("Signer is not connected");
+        return;
+      }
+
+      let asset_symbol = document
+        .getElementById("delete_asset_symbol_txt")
+        .value.toUpperCase();
+      console.log(asset_symbol);
+
+      try {
+        // try to add the new asset
+        await contract_instance.removeAsset(asset_symbol);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        alert("Asset " + asset_symbol + " was deleted !");
+        console.log("Asset " + asset_symbol + " was deleted !");
+      }
+    }
+
+    // get portfolio
     async function getPortfolio() {
       if (signer == null) {
         alert("Please connect wallet!");
@@ -474,6 +529,21 @@
       } catch (err) {
         console.error(err);
       }
+    }
+
+    // generate dynamically portfolio table with
+    function genPortfolioTable(data) {
+      let table = "<table style='margin: 0px auto;'>";
+      table += "<tr><th>Symbol</th><th>Size</th></tr>";
+      data.forEach((asset) => {
+        table += `<tr><td>${hex_to_ascii(
+          asset.symbol
+        )}</td><td>${ethers.utils.formatUnits(asset.size, "ether")}</td></tr>`;
+      });
+
+      table += "</table>";
+
+      return table;
     }
   </script>
 </html>
