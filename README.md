@@ -12,8 +12,8 @@
   - Update Asset
   - Delete Asset
   - Get Portfolio
-- Unittest development using Hardhard
-  - Unitests for all contract functions
+- Unit testing development using Hardhard
+  - Baseline unit tests for all contract functions
 
 ### PART 2: Web3 App
 
@@ -28,6 +28,6 @@
 
 ### TO NOTICE
 
-- Sole Purpose of project is the evaluation of the EVM sidechain in the XRPL ecosystem
-- Contract is not bullet proof (not purpose of the project)
-- Web app is not bullet proof (not purpose of the project)
+- Sole Purpose of the project is the evaluation of the EVM sidechain in the XRPL ecosystem
+- There is no intent to present completeness/proficiency in Contract development
+- There is no intent to present completeness/proficiency in Web3 Development
