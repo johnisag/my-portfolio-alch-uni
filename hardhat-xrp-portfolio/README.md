@@ -20,3 +20,10 @@ npx hardhat run scripts/deploy.js --network xrpl
 npx hardhat run scripts/use_with_signer.js
 npx hardhat run scripts/use_with_provider.js
 ```
+
+## TO FLATTEN AND VERIFY
+
+```shell
+npm i @poanet/solidity-flattener
+./node_modules/.bin/poa-solidity-flattener ./contracts/Portfolio.sol
+```

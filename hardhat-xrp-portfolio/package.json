@@ -9,6 +9,7 @@
   "author": "johnis",
   "license": "MIT",
   "dependencies": {
+    "@poanet/solidity-flattener": "^3.0.9",
     "dotenv": "^16.3.1"
   },
   "devDependencies": {
